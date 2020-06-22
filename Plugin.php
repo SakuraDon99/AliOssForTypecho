@@ -218,10 +218,8 @@ class AliOssForTypecho_Plugin implements Typecho_Plugin_Interface
         date_default_timezone_set('PRC');
 
         $file_origin_name = self::getSafeName($file['name']);
-        $file_id = substr(time(), 5) . sprintf('%u', crc32(uniqid()));
 
-        // $relative_path = date('Y/m/d/') . $file_id . '/' . $file_origin_name;
-        $relative_path = self::getFileDirectory($file_origin_name);
+        $relative_path = self::getOssDirectory($file_origin_name);
         $object_name = $userDir . $relative_path;
 
         if (isset($file['tmp_name'])) {
@@ -561,7 +559,8 @@ class AliOssForTypecho_Plugin implements Typecho_Plugin_Interface
         return isset($info['extension']) ? strtolower($info['extension']) : '';
     }
 
-    private static function getFileDirectory($file) {
-        return date('Y/m/') . time() . '#' . $file;
+    private static function getOssDirectory($file) {
+        $file_id = time() . sprintf('%u', crc32(uniqid()));
+        return date('Y/m/') . $file_id . '.' . end(explode('.', $file));
     }
 }
